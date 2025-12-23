@@ -1,0 +1,49 @@
+services:
+  cloudflare-ddns-home:
+    image: oznu/cloudflare-ddns:latest
+    container_name: cloudflare-ddns-home
+    restart: unless-stopped
+    environment:
+      - API_KEY=${CLOUDFLARE_API_KEY}
+      - ZONE=${ZONE}
+      - SUBDOMAIN=${SUBDOMAIN}
+      - PROXIED=false
+   
+  cloudflare-tunnel:
+    container_name: cloudflare-tunnel
+    image: cloudflare/cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+     - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    networks: [internal]
+
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    volumes:
+      - ./vw-data:/data
+    networks: [internal]
+    ports:
+      - "8080:80"
+
+  calibre-web:
+    image: linuxserver/calibre-web:latest
+    container_name: calibre-web
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Helsinki
+    volumes:
+      - ./calibre-config:/config
+      - ./books:/books
+    networks: [internal]
+    ports:
+     - "8083:8083"
+   
+networks:
+  internal:
+    driver: bridge
+
