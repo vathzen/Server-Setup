@@ -8,14 +8,21 @@ services:
       - ZONE=${ZONE}
       - SUBDOMAIN=${SUBDOMAIN}
       - PROXIED=false
-   
-  cloudflare-tunnel:
-    container_name: cloudflare-tunnel
-    image: cloudflare/cloudflared
+ 
+  caddy:
+    image: caddybuilds/caddy-cloudflare:latest
+    container_name: caddy
     restart: unless-stopped
-    command: tunnel run
+    ports:
+      - "80:80"
+      - "443:443"
     environment:
-     - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+      - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_KEY}
+      - TAILNET_IP=${TAILNET_IP}    
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./containers/caddy/caddy_data:/data
+      - ./containers/caddy/caddy_config:/config
     networks: [internal]
 
   vaultwarden:
@@ -23,7 +30,7 @@ services:
     container_name: vaultwarden
     restart: unless-stopped
     volumes:
-      - ./vw-data:/data
+      - ./containers/vaultwarden:/data
     networks: [internal]
     ports:
       - "8080:80"
@@ -37,11 +44,20 @@ services:
       - PGID=1000
       - TZ=Europe/Helsinki
     volumes:
-      - ./calibre-config:/config
-      - ./books:/books
+      - ./containers/calibre/calibre-config:/config
+      - ./containers/calibre/books:/books
     networks: [internal]
     ports:
      - "8083:8083"
+
+  #cloudflare-tunnel
+  #  container_name: cloudflare-tunnel
+  #  image: cloudflare/cloudflared
+  #  restart: unless-stopped
+  #  command: tunnel run
+  #  environment:
+  #   - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+  #  networks: [internal]
    
 networks:
   internal:
