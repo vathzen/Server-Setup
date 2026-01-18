@@ -3,7 +3,7 @@
 }
 
 (ts_host) {
-	@blocked not remote_ip 100.107.83.0/24
+	@blocked not remote_ip {env.TAILNET_IP}/24
 
 	respond @blocked "Unauthorized" 403
 }
@@ -16,4 +16,9 @@ vault.vathzen.in {
 calibre.vathzen.in {
 	import ts_host
 	reverse_proxy calibre-web:8083
+}
+
+pdf.vathzen.in {
+	import ts_host
+	reverse_proxy stirling-pdf:8080
 }

@@ -1,0 +1,39 @@
+services:
+  cloudflare-ddns-home:
+    image: oznu/cloudflare-ddns:latest
+    container_name: cloudflare-ddns-home
+    environment:
+      - API_KEY=${CLOUDFLARE_API_KEY}
+      - ZONE=${ZONE}
+      - SUBDOMAIN=${SUBDOMAIN}
+      - PROXIED=false
+    restart: unless-stopped
+ 
+  caddy:
+    image: caddybuilds/caddy-cloudflare:latest
+    container_name: caddy
+    environment:
+      - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_KEY}
+      - TAILNET_IP=${TAILNET_IP}    
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./containers/caddy/caddy_data:/data
+      - ./containers/caddy/caddy_config:/config
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: unless-stopped
+    networks: [internal]
+
+  # cloudflare-tunnel:
+  #   container_name: cloudflare-tunnel
+  #   image: cloudflare/cloudflared
+  #   restart: unless-stopped
+  #   command: tunnel run
+  #   environment:
+  #   - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+  #   networks: [internal]
+
+networks:
+  internal:
+    driver: bridge

@@ -1,0 +1,60 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    volumes:
+      - ./containers/vaultwarden:/data
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    networks: [internal]
+  
+  calibre-web-automated:
+    image: crocodilestick/calibre-web-automated:latest
+    container_name: calibre-web
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Helsinki
+      - NETWORK_SHARE_MODE=false
+      - HARDCOVER_TOKEN=${HARDCOVER_TOKEN}
+    volumes:
+      - ./containers/calibre/calibre-config:/config
+      - ./containers/calibre/ingest:/cwa-book-ingest
+      - ./containers/calibre/books:/calibre-library
+    ports:
+      - 8083:8083
+    restart: unless-stopped
+    networks: [internal]
+
+  stirling-pdf:
+    image: stirlingtools/stirling-pdf:latest-fat
+    container_name: stirling-pdf
+    ports:
+      - '8090:8080'
+    volumes:
+      - ./containers/stirling-pdf/stirling-data/tessdata:/usr/share/tessdata
+      - ./containers/stirling-pdf/stirling-data/configs:/configs
+      - ./containers/stirling-pdf/stirling-data/logs:/logs
+      - ./containers/stirling-pdf/stirling-data/pipeline:/pipeline  
+    restart: unless-stopped
+    networks: [internal]
+  
+  # calibre-web:
+  #   image: linuxserver/calibre-web:latest
+  #   container_name: calibre-web
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=Europe/Helsinki
+  #   volumes:
+  #     - ./containers/calibre/calibre-config:/config
+  #     - ./containers/calibre/books:/books
+  #   ports:
+  #    - "8083:8083"
+  #   restart: unless-stopped
+  #   networks: [internal]
+
+networks:
+  internal:
+    driver: bridge
