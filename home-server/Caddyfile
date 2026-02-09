@@ -18,13 +18,13 @@ calibre.vathzen.in {
 	reverse_proxy calibre-web:8083
 }
 
+http://calibre.vathzen.in {
+    reverse_proxy calibre-web:8083
+}
+
 shelfmark.vathzen.in {
 	import ts_host
 	reverse_proxy shelfmark:8084
-}
-
-http://calibre.vathzen.in {
-    reverse_proxy calibre-web:8083
 }
 
 pdf.vathzen.in {
@@ -40,4 +40,9 @@ prom.vathzen.in {
 grafana.vathzen.in {
 	import ts_host
 	reverse_proxy grafana:3000
+}
+
+pi.vathzen.in {
+	import ts_host
+	reverse_proxy pihole:80
 }
