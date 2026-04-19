@@ -2,23 +2,38 @@
 	acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
 }
 
-(ts_host) {
-	@blocked not remote_ip {env.TAILNET_IP}/24
-
-	respond @blocked "Unauthorized" 403
-}
-
 vault.vathzen.in {
-	import ts_host
 	reverse_proxy vaultwarden:80
 }
 
 calibre.vathzen.in {
-	import ts_host
 	reverse_proxy calibre-web:8083
 }
 
+http://calibre.vathzen.in {
+    reverse_proxy calibre-web:8083
+}
+
+shelfmark.vathzen.in {
+	reverse_proxy shelfmark:8084
+}
+
 pdf.vathzen.in {
-	import ts_host
 	reverse_proxy stirling-pdf:8080
+}
+
+prom.vathzen.in {
+	reverse_proxy prometheus:9090
+}
+
+grafana.vathzen.in {
+	reverse_proxy grafana:3000
+}
+
+pi.vathzen.in {
+	reverse_proxy pihole:80
+}
+
+kite-mcp.vathzen.in {
+	reverse_proxy localhost:7070
 }

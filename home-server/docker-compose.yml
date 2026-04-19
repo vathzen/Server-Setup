@@ -1,3 +1,5 @@
 include:
   - docker-compose.infra.yml
   - docker-compose.apps.yml
+  - docker-compose.monitoring.yml
+  - docker-compose.media.yml

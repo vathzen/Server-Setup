@@ -16,7 +16,7 @@ services:
       - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_KEY}
       - TAILNET_IP=${TAILNET_IP}    
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./containers/caddy/Caddyfile:/etc/caddy/Caddyfile
       - ./containers/caddy/caddy_data:/data
       - ./containers/caddy/caddy_config:/config
     ports:
