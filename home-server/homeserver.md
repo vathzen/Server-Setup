@@ -8,6 +8,7 @@ build-essentials
 
 ### Software Packages
 btop
+tree
 
 ### SSH Setup
 Edit /etc/ssh/sshd_config and change:
@@ -31,3 +32,10 @@ Edit the theme to add:
 ```bash
 PROMPT="%{$fg_bold[magenta]%}%n@%m %{$reset_color%}%(?:%{$fg_bold[green]%}%1{➜%} :%{$fg_bold[red]%}%1{➜%} ) %{$fg[cyan]%}%c%{$reset_color%} "
 ```
+
+### Paths
+All docker containers store their files in the `./containers/<container>/` workspace. Listed are the files that are commited to track changes and the paths they go in.
+
+- `./configs/Caddyfile -> ./containers/caddy/`
+- `./configs/prometheus.yml -> ./containers/prometheus/config/`
+- `./configs/config.yml -> ./containers/samba/config/`

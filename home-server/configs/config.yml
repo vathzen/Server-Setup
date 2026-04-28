@@ -1,0 +1,33 @@
+auth:
+  - user: zeus
+    group: zeus
+    uid: 1000
+    gid: 1000
+    password: ${SAMBA_PASSWORD}
+
+global:
+  - "force user = zeus"
+  - "force group = zeus"
+  - "server min protocol = SMB2"
+  - "client min protocol = SMB2"
+
+share:
+  - name: Cornucopia
+    comment: 4TB Seagate HDD
+    path: /mnt/cornucopia
+    browsable: yes
+    readonly: no
+    guestok: no
+    validusers: zeus
+    writelist: zeus
+    veto: no
+
+  - name: pandora
+    comment: 512GB NVMe SSD
+    path: /mnt/pandora
+    browsable: yes
+    readonly: no
+    guestok: no
+    validusers: zeus
+    writelist: zeus
+    veto: no

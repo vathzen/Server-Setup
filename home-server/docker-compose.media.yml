@@ -1,34 +1,47 @@
 services:
 
   sonarr:
-      image: lscr.io/linuxserver/sonarr:latest
-      container_name: sonarr
-      environment:
-        - PUID=1000
-        - PGID=1000
-        - TZ=Europe/Helsinki
-      volumes:
-        - ./containers/sonarr/config:/config
-        - ./mnt/pandora/media/tv:/tv
-        - ./mnt/pandora/downloads:/downloads
-      ports:
-        - "8989:8989"
-      restart: unless-stopped
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Helsinki
+    volumes:
+      - ./containers/sonarr/config:/config
+      - /mnt/cornucopia/media/tv:/tv
+      - /mnt/cornucopia/downloads:/downloads
+    ports:
+      - "8989:8989"
+    restart: unless-stopped
 
   radarr:
-      image: lscr.io/linuxserver/radarr:latest
-      container_name: radarr
-      environment:
-        - PUID=1000
-        - PGID=1000
-        - TZ=Europe/Helsinki
-      volumes:
-        - ./containers/radarr/config:/config
-        - ./mnt/pandora/media/movies:/movies
-        - ./mnt/pandora/downloads:/downloads
-      ports:
-        - "8990:8990"
-      restart: unless-stopped
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Helsinki
+    volumes:
+      - ./containers/radarr/config:/config
+      - /mnt/cornucopia/media/movies:/movies
+      - /mnt/cornucopia/downloads:/downloads
+    ports:
+      - "8990:8990"
+    restart: unless-stopped
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Helsinki
+    volumes:
+      - ./containers/prowlarr/config:/config
+    ports:
+      - "9696:9696"
+    restart: unless-stopped
 
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
@@ -40,22 +53,9 @@ services:
       - WEBUI_PORT=8082
     volumes:
       - ./containers/qbittorrent/config:/config
-      - ./mnt/pandora/downloads:/downloads
+      - /mnt/cornucopia/downloads:/downloads
     ports:
       - "8082:8082"
       - "6881:6881"
       - "6881:6881/udp"
     restart: unless-stopped
-
-  prowlarr:
-      image: lscr.io/linuxserver/prowlarr:latest
-      container_name: prowlarr
-      environment:
-        - PUID=1000
-        - PGID=1000
-        - TZ=Europe/Helsinki
-      volumes:
-        - ./containers/prowlarr/config:/config
-      ports:
-        - "9696:9696"
-      restart: unless-stopped
