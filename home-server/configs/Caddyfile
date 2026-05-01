@@ -37,3 +37,19 @@ pi.vathzen.in {
 kite-mcp.vathzen.in {
 	reverse_proxy localhost:7070
 }
+
+sonarr.vathzen.in {
+    reverse_proxy sonarr:8989
+}
+
+radarr.vathzen.in {
+    reverse_proxy radarr:7878
+}
+
+prowlarr.vathzen.in {
+    reverse_proxy prowlarr:9696
+}
+
+qbit.vathzen.in {
+    reverse_proxy qbittorrent:8082
+}
