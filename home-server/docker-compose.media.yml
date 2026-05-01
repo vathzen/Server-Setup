@@ -62,6 +62,28 @@ services:
     restart: unless-stopped
     networks: [internal]
 
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Helsinki
+      - JELLYFIN_PublishedServerUrl=https://tv.vathzen.in
+    volumes:
+      - ./containers/jellyfin/config:/config
+      - /mnt/cornucopia/media:/data/media:ro
+    ports:
+      - "8096:8096"
+      - "7359:7359/udp"
+    devices:
+      - /dev/dri:/dev/dri
+    group_add:
+      - "44"
+      - "992"
+    restart: unless-stopped
+    networks: [internal]
+
 networks:
   internal:
     driver: bridge

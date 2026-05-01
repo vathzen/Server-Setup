@@ -53,3 +53,7 @@ prowlarr.vathzen.in {
 qbit.vathzen.in {
     reverse_proxy qbittorrent:8082
 }
+
+tv.vathzen.in {
+    reverse_proxy jellyfin:8096
+}
