@@ -3,3 +3,8 @@ include:
   - docker-compose.apps.yml
   - docker-compose.monitoring.yml
   - docker-compose.media.yml
+
+networks:
+  internal:
+    name: olympus_internal
+    driver: bridge

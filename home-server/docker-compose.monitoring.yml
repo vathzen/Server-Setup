@@ -49,4 +49,5 @@ services:
 
 networks:
   internal:
-    driver: bridge
+    external: true
+    name: olympus_internal

@@ -55,12 +55,17 @@ services:
     volumes:
       - ./containers/qbittorrent/config:/config
       - /mnt/cornucopia:/data
-    ports:
-      - "8082:8082"
-      - "6881:6881"
-      - "6881:6881/udp"
+    network_mode: "service:gluetun"
+    depends_on:
+      gluetun:
+        condition: service_started
     restart: unless-stopped
-    networks: [internal]
+    # Commenting cuz Gluetun
+    # ports:
+    #   - "8082:8082"
+    #   - "6881:6881"
+    #   - "6881:6881/udp"
+    # networks: [internal]
 
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:latest
@@ -86,4 +91,5 @@ services:
 
 networks:
   internal:
-    driver: bridge
+    external: true
+    name: olympus_internal

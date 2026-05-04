@@ -32,6 +32,7 @@ docker-compose.yml
 | cadvisor        | 8070      | 8080           | Container metrics        |
 | prometheus      | 9090      | 9090           | Metrics collector        |
 | grafana         | 3000      | 3000           | Metrics dashboards       |
+| gluetun         | 8000      | 8000           | VPN Client for QBit      |
 
 ---
 
@@ -81,6 +82,21 @@ SMB file server exposing Seagate and NVMe drives to the network.
 |---------------------|---------------------|
 | `/mnt/cornucopia`   | `/mnt/cornucopia`   |
 | `/mnt/pandora`      | `/mnt/pandora`      |
+
+### gluetun
+VPN Client that QBittorent uses to acquire content. Connected to ProtonVPN Wireguard client.
+
+| Variable                      | Description                    |
+|-------------------------------|--------------------------------|
+| `WIREGUARD_PRIVATE_KEY`       | Wireguard Client Identifier    |
+| `WIREGUARD_ADDRESS`           | VPN Server IP to bind to       |
+| `VPN_SERVER_COUNTRY`          | Country to tunnel to           |
+
+Sends a POST Request to QBittorrent with the data
+```python
+{"listen_port":{{PORTS}}
+``` 
+to set the port which qbittorrent should use.
 
 ---
 
@@ -180,7 +196,7 @@ Torrent client used by Sonarr and Radarr for downloads.
 
 - Config: `./containers/qbittorrent/config`
 - WebUI port: `8082`
-- BitTorrent port: `6881` (TCP + UDP)
+- BitTorrent port: Set from Gluetun Startup Config
 
 | Mount                       | Purpose        |
 |-----------------------------|----------------|
