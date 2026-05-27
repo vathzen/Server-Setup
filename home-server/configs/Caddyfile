@@ -46,6 +46,10 @@ radarr.vathzen.in {
     reverse_proxy radarr:7878
 }
 
+bazarr.vathzen.in {
+    reverse_proxy bazarr:6767
+}
+
 prowlarr.vathzen.in {
     reverse_proxy prowlarr:9696
 }

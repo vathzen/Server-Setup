@@ -2,6 +2,8 @@ services:
   vaultwarden:
     image: vaultwarden/server:latest
     container_name: vaultwarden
+    environment:
+      - DISABLE_ADMIN_TOKEN=true
     volumes:
       - ./containers/vaultwarden:/data
     ports:

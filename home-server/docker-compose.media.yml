@@ -30,6 +30,21 @@ services:
     restart: unless-stopped
     networks: [internal]
 
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Helsinki
+    volumes:
+      - ./containers/bazarr/config:/config
+      - /mnt/cornucopia:/data
+    ports:
+      - "6767:6767"
+    restart: unless-stopped
+    networks: [internal]
+
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
@@ -41,6 +56,17 @@ services:
       - ./containers/prowlarr/config:/config
     ports:
       - "9696:9696"
+    restart: unless-stopped
+    networks: [internal]
+
+  byparr:
+    image: ghcr.io/thephaseless/byparr:latest
+    container_name: byparr
+    environment:
+      - TZ=Europe/Helsinki
+      - LOG_LEVEL=info
+    ports:
+      - "8191:8191"
     restart: unless-stopped
     networks: [internal]
 
@@ -60,12 +86,6 @@ services:
       gluetun:
         condition: service_started
     restart: unless-stopped
-    # Commenting cuz Gluetun
-    # ports:
-    #   - "8082:8082"
-    #   - "6881:6881"
-    #   - "6881:6881/udp"
-    # networks: [internal]
 
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:latest

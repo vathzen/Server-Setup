@@ -74,14 +74,13 @@ services:
       - SERVER_COUNTRIES=${VPN_SERVER_COUNTRY}
       - VPN_PORT_FORWARDING=on
       - VPN_PORT_FORWARDING_PROVIDER=protonvpn
-      - PORT_FORWARD_ONLY=on
+      - PORT_FORWARD_ONLY=yes
       - TZ=Europe/Helsinki
-      - VPN_PORT_FORWARDING_UP_COMMAND=/bin/sh -c 'wget -O- --post-data "json=%7B%22listen_port%22%3A{{PORTS}}%7D" http://127.0.0.1:8082/api/v2/app/setPreferences 2>&1'
-      # - FIREWALL_OUTBOUND_SUBNETS=192.168.101.0/24
+      - VPN_PORT_FORWARDING_UP_COMMAND=/bin/sh -c 'wget -O- -nv --retry-connrefused --post-data "json={\"listen_port\":{{PORT}}}" http://127.0.0.1:8082/api/v2/app/setPreferences'
     volumes:
       - ./containers/gluetun:/gluetun
     ports:
-      - "8082:8082" # qBittorrent
+      - "8082:8082" # qBittorrent WebUI
       - "8000:8000"
     restart: unless-stopped
     networks: [internal]
