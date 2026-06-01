@@ -3,6 +3,8 @@ include:
   - docker-compose.apps.yml
   - docker-compose.monitoring.yml
   - docker-compose.media.yml
+  - path: docker-compose.sparky.yml
+    env_file: .env.sparky
 
 networks:
   internal:
