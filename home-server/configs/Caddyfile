@@ -61,3 +61,7 @@ qbit.vathzen.in {
 tv.vathzen.in {
     reverse_proxy jellyfin:8096
 }
+
+sparky.vathzen.in {
+    reverse_proxy sparkyfitness-frontend:80
+}
