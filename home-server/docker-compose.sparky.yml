@@ -1,0 +1,86 @@
+services:
+  sparkyfitness-db:
+    container_name: sparkyfitness-db
+    image: postgres:18.3-alpine
+    # ports:
+    #   - "${SPARKY_FITNESS_DB_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: ${SPARKY_FITNESS_DB_NAME}
+      POSTGRES_USER: ${SPARKY_FITNESS_DB_USER}
+      POSTGRES_PASSWORD: ${SPARKY_FITNESS_DB_PASSWORD}
+      PUID: 1000
+      GUID: 1000
+    volumes:
+      - ${DB_PATH:-./postgresql}:/var/lib/postgresql
+    restart: always
+    networks: [internal]
+
+  sparkyfitness-server:
+    container_name: sparkyfitness-backend
+    image: codewithcj/sparkyfitness_server:latest
+    environment:
+      SPARKY_FITNESS_LOG_LEVEL: ${SPARKY_FITNESS_LOG_LEVEL}
+      ALLOW_PRIVATE_NETWORK_CORS: ${ALLOW_PRIVATE_NETWORK_CORS:-false}
+      SPARKY_FITNESS_EXTRA_TRUSTED_ORIGINS: ${SPARKY_FITNESS_EXTRA_TRUSTED_ORIGINS:-}
+      SPARKY_FITNESS_DB_USER: ${SPARKY_FITNESS_DB_USER}
+      SPARKY_FITNESS_DB_HOST: ${SPARKY_FITNESS_DB_HOST}
+      SPARKY_FITNESS_DB_NAME: ${SPARKY_FITNESS_DB_NAME}
+      SPARKY_FITNESS_DB_PASSWORD: ${SPARKY_FITNESS_DB_PASSWORD}
+      SPARKY_FITNESS_APP_DB_USER: ${SPARKY_FITNESS_APP_DB_USER}
+      SPARKY_FITNESS_APP_DB_PASSWORD: ${SPARKY_FITNESS_APP_DB_PASSWORD}
+      SPARKY_FITNESS_DB_PORT: 5432
+      SPARKY_FITNESS_API_ENCRYPTION_KEY: ${SPARKY_FITNESS_API_ENCRYPTION_KEY}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      SPARKY_FITNESS_FRONTEND_URL: ${SPARKY_FITNESS_FRONTEND_URL}
+      SPARKY_FITNESS_DISABLE_SIGNUP: ${SPARKY_FITNESS_DISABLE_SIGNUP}
+      SPARKY_FITNESS_ADMIN_EMAIL: ${SPARKY_FITNESS_ADMIN_EMAIL}
+      PUID: 1000
+      GUID: 1000
+    depends_on:
+      - sparkyfitness-db
+    volumes:
+      - ${SERVER_BACKUP_PATH:-./backup}:/app/SparkyFitnessServer/backup
+      - ${SERVER_UPLOADS_PATH:-./uploads}:/app/SparkyFitnessServer/uploads
+    restart: always
+    networks: [internal]
+
+  sparkyfitness-frontend:
+    image: codewithcj/sparkyfitness:latest
+    container_name: sparkyfitness-frontend
+    ports:
+      - "3004:80"
+    environment:
+      SPARKY_FITNESS_FRONTEND_URL: ${SPARKY_FITNESS_FRONTEND_URL}
+      SPARKY_FITNESS_SERVER_HOST: sparkyfitness-server
+      SPARKY_FITNESS_SERVER_PORT: 3010
+      PUID: 1000
+      GUID: 1000
+    depends_on:
+      - sparkyfitness-server
+    restart: always
+    networks: [internal]
+
+  sparkyfitness-mcp:
+    container_name: sparkyfitness-mcp
+    image: codewithcj/sparkyfitness_mcp:latest
+    environment:
+      SPARKY_FITNESS_DB_USER: ${SPARKY_FITNESS_DB_USER}
+      SPARKY_FITNESS_DB_HOST: ${SPARKY_FITNESS_DB_HOST}
+      SPARKY_FITNESS_DB_NAME: ${SPARKY_FITNESS_DB_NAME}
+      SPARKY_FITNESS_DB_PASSWORD: ${SPARKY_FITNESS_DB_PASSWORD}
+      SPARKY_FITNESS_APP_DB_USER: ${SPARKY_FITNESS_APP_DB_USER}
+      SPARKY_FITNESS_APP_DB_PASSWORD: ${SPARKY_FITNESS_APP_DB_PASSWORD}
+      SPARKY_FITNESS_DB_PORT: 5432
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      MCP_TRANSPORT: "http"
+    networks: [internal]
+    ports:
+      - "3001:3001"
+    restart: always
+    depends_on:
+      - sparkyfitness-db
+
+networks:
+  internal:
+    external: true
+    name: olympus_internal
