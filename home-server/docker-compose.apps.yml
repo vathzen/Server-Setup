@@ -10,7 +10,7 @@ services:
       - "8080:80"
     restart: unless-stopped
     networks: [internal]
-  
+
   calibre-web-automated:
     image: crocodilestick/calibre-web-automated:latest
     container_name: calibre-web
@@ -23,12 +23,12 @@ services:
     volumes:
       - ./containers/calibre/calibre-config:/config
       - ./containers/calibre/ingest:/cwa-book-ingest
-      - ./containers/calibre/books:/calibre-library
+      - /mnt/cornucopia/books:/calibre-library
     ports:
       - 8083:8083
     restart: unless-stopped
     networks: [internal]
-  
+
   shelfmark:
     image: ghcr.io/calibrain/shelfmark:latest
     container_name: shelfmark
@@ -43,18 +43,31 @@ services:
       - ./containers/shelfmark:/config
     networks: [internal]
 
-  # stirling-pdf:
-  #   image: stirlingtools/stirling-pdf:latest-fat
-  #   container_name: stirling-pdf
-  #   ports:
-  #     - '8090:8080'
-  #   volumes:
-  #     - ./containers/stirling-pdf/stirling-data/tessdata:/usr/share/tessdata
-  #     - ./containers/stirling-pdf/stirling-data/configs:/configs
-  #     - ./containers/stirling-pdf/stirling-data/logs:/logs
-  #     - ./containers/stirling-pdf/stirling-data/pipeline:/pipeline  
-  #   restart: unless-stopped
-  #   networks: [internal]
+  loan-tracker:
+    build: ./containers/loan-tracker
+    container_name: claude-loan-tracker
+    user: "1000:1000"
+    environment:
+      - TZ=Europe/Helsinki
+      - PORT=8080
+      - DATA_FILE=/data/loan.json
+    volumes:
+      - ./containers/loan-tracker/data:/data
+    networks: [internal]
+    restart: unless-stopped
+
+  stirling-pdf:
+    image: stirlingtools/stirling-pdf:latest-fat
+    container_name: stirling-pdf
+    ports:
+      - '8090:8080'
+    volumes:
+      - ./containers/stirling-pdf/stirling-data/tessdata:/usr/share/tessdata
+      - ./containers/stirling-pdf/stirling-data/configs:/configs
+      - ./containers/stirling-pdf/stirling-data/logs:/logs
+      - ./containers/stirling-pdf/stirling-data/pipeline:/pipeline
+    restart: unless-stopped
+    networks: [internal]
 
 networks:
   internal:

@@ -1,9 +1,8 @@
 services:
   sparkyfitness-db:
-    container_name: sparkyfitness-db
     image: postgres:18.3-alpine
-    # ports:
-    #   - "${SPARKY_FITNESS_DB_PORT:-5432}:5432"
+    container_name: sparkyfitness-db
+    restart: always
     environment:
       POSTGRES_DB: ${SPARKY_FITNESS_DB_NAME}
       POSTGRES_USER: ${SPARKY_FITNESS_DB_USER}
@@ -11,13 +10,12 @@ services:
       PUID: 1000
       GUID: 1000
     volumes:
-      - ${DB_PATH:-./postgresql}:/var/lib/postgresql
-    restart: always
+      - ./containers/sparky/postgresql:/var/lib/postgresql
     networks: [internal]
 
   sparkyfitness-server:
-    container_name: sparkyfitness-backend
     image: codewithcj/sparkyfitness_server:latest
+    container_name: sparkyfitness-server
     environment:
       SPARKY_FITNESS_LOG_LEVEL: ${SPARKY_FITNESS_LOG_LEVEL}
       ALLOW_PRIVATE_NETWORK_CORS: ${ALLOW_PRIVATE_NETWORK_CORS:-false}
@@ -33,16 +31,16 @@ services:
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
       SPARKY_FITNESS_FRONTEND_URL: ${SPARKY_FITNESS_FRONTEND_URL}
       SPARKY_FITNESS_DISABLE_SIGNUP: ${SPARKY_FITNESS_DISABLE_SIGNUP}
-      SPARKY_FITNESS_ADMIN_EMAIL: ${SPARKY_FITNESS_ADMIN_EMAIL}
+      SPARKY_FITNESS_ADMIN_EMAIL: ${SPARKY_FITNESS_ADMIN_EMAIL} #User with this email can access the admin panel
       PUID: 1000
       GUID: 1000
+    networks: [internal]
+    restart: always
     depends_on:
       - sparkyfitness-db
     volumes:
-      - ${SERVER_BACKUP_PATH:-./backup}:/app/SparkyFitnessServer/backup
-      - ${SERVER_UPLOADS_PATH:-./uploads}:/app/SparkyFitnessServer/uploads
-    restart: always
-    networks: [internal]
+      - ./containers/sparky/backup:/app/SparkyFitnessServer/backup # Mount volume for backups
+      - ./containers/sparky/uploads:/app/SparkyFitnessServer/uploads # Mount volume for Profile pictures and excercise images
 
   sparkyfitness-frontend:
     image: codewithcj/sparkyfitness:latest
@@ -55,30 +53,10 @@ services:
       SPARKY_FITNESS_SERVER_PORT: 3010
       PUID: 1000
       GUID: 1000
+    networks: [internal]
+    restart: always
     depends_on:
       - sparkyfitness-server
-    restart: always
-    networks: [internal]
-
-  sparkyfitness-mcp:
-    container_name: sparkyfitness-mcp
-    image: codewithcj/sparkyfitness_mcp:latest
-    environment:
-      SPARKY_FITNESS_DB_USER: ${SPARKY_FITNESS_DB_USER}
-      SPARKY_FITNESS_DB_HOST: ${SPARKY_FITNESS_DB_HOST}
-      SPARKY_FITNESS_DB_NAME: ${SPARKY_FITNESS_DB_NAME}
-      SPARKY_FITNESS_DB_PASSWORD: ${SPARKY_FITNESS_DB_PASSWORD}
-      SPARKY_FITNESS_APP_DB_USER: ${SPARKY_FITNESS_APP_DB_USER}
-      SPARKY_FITNESS_APP_DB_PASSWORD: ${SPARKY_FITNESS_APP_DB_PASSWORD}
-      SPARKY_FITNESS_DB_PORT: 5432
-      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
-      MCP_TRANSPORT: "http"
-    networks: [internal]
-    ports:
-      - "3001:3001"
-    restart: always
-    depends_on:
-      - sparkyfitness-db
 
 networks:
   internal:

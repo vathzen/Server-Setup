@@ -8,13 +8,13 @@ services:
       - SUBDOMAIN=${SUBDOMAIN}
       - PROXIED=false
     restart: unless-stopped
- 
+
   caddy:
     image: caddybuilds/caddy-cloudflare:latest
     container_name: caddy
     environment:
       - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_KEY}
-      - TAILNET_IP=${TAILNET_IP}    
+      - TAILNET_IP=${TAILNET_IP}
     volumes:
       - ./containers/caddy/Caddyfile:/etc/caddy/Caddyfile
       - ./containers/caddy/caddy_data:/data
@@ -24,23 +24,23 @@ services:
       - "443:443"
     restart: unless-stopped
     networks: [internal]
-  
+
   pihole:
-    container_name: pihole
-    image: pihole/pihole:latest
-    environment:
-      TZ: 'Europe/Helsinki'
-      FTLCONF_webserver_api_password: ${PIHOLE_API_PASSWORD}
-      FTLCONF_dns_listeningMode: 'ALL'
-    volumes:
-      - ./containers/pihole:/etc/pihole
-    ports:
-      - "53:53/tcp"
-      - "53:53/udp"
-      - "8075:80/tcp"
-      - "4431:443/tcp"
-    restart: unless-stopped
-    networks: [internal]
+   container_name: pihole
+   image: pihole/pihole:latest
+   environment:
+     TZ: 'Europe/Helsinki'
+     FTLCONF_webserver_api_password: ${PIHOLE_API_PASSWORD}
+     FTLCONF_dns_listeningMode: 'ALL'
+   volumes:
+     - ./containers/pihole:/etc/pihole
+   ports:
+     - "53:53/tcp"
+     - "53:53/udp"
+     - "8075:80/tcp"
+     - "4431:443/tcp"
+   restart: unless-stopped
+   networks: [internal]
 
   samba:
     image: crazymax/samba:latest
