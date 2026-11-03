@@ -1,5 +1,5 @@
 services:
-
+# Last updated: 03/11/2026 2:38 PM
   node_exporter:
     image: quay.io/prometheus/node-exporter:latest
     container_name: node_exporter
@@ -10,6 +10,9 @@ services:
     volumes:
       - "/:/host:ro,rslave"
     networks: [internal]
+    labels:
+      dynacat.name: Node Exporter
+      dynacat.category: Monitoring
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
@@ -23,6 +26,10 @@ services:
     - /var/lib/docker/:/var/lib/docker:ro
     restart: unless-stopped
     networks: [internal]
+    labels:
+      dynacat.name: CAdvisor
+      dynacat.icon: sh:cadvisor
+      dynacat.category: Monitoring
 
   prometheus:
     image: prom/prometheus:latest
@@ -36,6 +43,11 @@ services:
     command:
       - "--config.file=/config/prometheus.yml"
     networks: [internal]
+    labels:
+      dynacat.name: Prometheus
+      dynacat.icon: si:prometheus
+      dynacat.category: Monitoring
+      dyncat.url: https://prom.vathzen.in
 
   grafana:
     image: grafana/grafana:latest
@@ -46,6 +58,33 @@ services:
       - ./containers/grafana:/var/lib/grafana
     restart: unless-stopped
     networks: [internal]
+    labels:
+      dynacat.name: Grafana
+      dynacat.icon: si:grafana
+      dynacat.category: Monitoring
+      dynacat.url: https://grafana.vathzen.in
+
+  dynacat:
+    container_name: dynacat
+    image: panonim/dynacat
+    restart: unless-stopped
+    volumes:
+      - ./containers/dynacat/config:/app/config
+      - ./containers/dynacat/assets:/app/assets
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - PUID=1000
+      - PGID=1000
+    ports:
+      - 8050:8080
+    env_file: ./containers/dynacat/.env
+    networks: [internal]
+    labels:
+      dynacat.name: Dynacat
+      dynacat.icon: sh:dynacat
+      dynacat.category: Monitoring
+      dynacat.url: https://home.vathzen.in
 
 networks:
   internal:

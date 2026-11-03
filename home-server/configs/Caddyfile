@@ -65,3 +65,11 @@ tv.vathzen.in {
 sparky.vathzen.in {
     reverse_proxy sparkyfitness-frontend:80
 }
+
+loan.vathzen.in {
+	reverse_proxy claude-loan-tracker:8080
+}
+
+home.vathzen.in {
+	reverse_proxy dynacat:8080
+}
