@@ -1,4 +1,5 @@
 services:
+# Last updated: 03/11/2026 2:19 PM
   cloudflare-ddns-home:
     image: oznu/cloudflare-ddns:latest
     container_name: cloudflare-ddns-home
@@ -8,6 +9,10 @@ services:
       - SUBDOMAIN=${SUBDOMAIN}
       - PROXIED=false
     restart: unless-stopped
+    labels:
+      dynacat.name: Cloudflare DDNS
+      dynacat.icon: si:cloudflare
+      dynacat.category: Infrastructure
 
   caddy:
     image: caddybuilds/caddy-cloudflare:latest
@@ -24,6 +29,10 @@ services:
       - "443:443"
     restart: unless-stopped
     networks: [internal]
+    labels:
+      dynacat.name: Caddy
+      dynacat.icon: si:caddy
+      dynacat.category: Infrastructure
 
   pihole:
    container_name: pihole
@@ -41,6 +50,11 @@ services:
      - "4431:443/tcp"
    restart: unless-stopped
    networks: [internal]
+   labels:
+      dynacat.name: Pi-hole
+      dynacat.icon: si:pihole
+      dynacat.category: Infrastructure
+      dynacat.url: https://pi.vathzen.in
 
   samba:
     image: crazymax/samba:latest
@@ -58,6 +72,10 @@ services:
       - /mnt/pandora:/mnt/pandora
     restart: unless-stopped
     networks: [internal]
+    labels:
+      dynacat.name: Samba
+      dynacat.icon: si:files
+      dynacat.category: Infrastructure
 
   gluetun:
     image: qmcgaw/gluetun:v3
@@ -84,6 +102,10 @@ services:
       - "8000:8000"
     restart: unless-stopped
     networks: [internal]
+    labels:
+      dynacat.name: Gluetun
+      dynacat.icon: si:protonvpn
+      dynacat.category: Infrastructure
 
 networks:
   internal:

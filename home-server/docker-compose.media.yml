@@ -1,4 +1,5 @@
 services:
+# Last updated: 03/11/2026 2:21 PM
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
@@ -13,6 +14,11 @@ services:
       - "8989:8989"
     restart: unless-stopped
     networks: [internal]
+    labels:
+      dynacat.name: Sonarr
+      dynacat.icon: si:sonarr
+      dynacat.category: Media
+      dynacat.url: https://sonarr.vathzen.in
 
   radarr:
     image: lscr.io/linuxserver/radarr:latest
@@ -28,6 +34,11 @@ services:
       - "7878:7878"
     restart: unless-stopped
     networks: [internal]
+    labels:
+      dynacat.name: Radarr
+      dynacat.icon: si:radarr
+      dynacat.category: Media
+      dynacat.url: https://radarr.vathzen.in
 
   bazarr:
     image: lscr.io/linuxserver/bazarr:latest
@@ -43,6 +54,11 @@ services:
       - "6767:6767"
     restart: unless-stopped
     networks: [internal]
+    labels:
+      dynacat.name: Bazarr
+      dynacat.icon: sh:bazarr-dark
+      dynacat.category: Media
+      dynacat.url: https://bazarr.vathzen.in
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
@@ -57,6 +73,11 @@ services:
       - "9696:9696"
     restart: unless-stopped
     networks: [internal]
+    labels:
+      dynacat.name: Prowlarr
+      dynacat.icon: sh:prowlarr-dark
+      dynacat.category: Media
+      dynacat.url: https://prowlarr.vathzen.in
 
   byparr:
     image: ghcr.io/thephaseless/byparr:latest
@@ -68,6 +89,11 @@ services:
       - "8191:8191"
     restart: unless-stopped
     networks: [internal]
+    labels:
+      dynacat.name: Byparr
+      dynacat.icon: sh:byparr-dark
+      dynacat.category: Media
+      dynacat.url: https://byparr.vathzen.in
 
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
@@ -85,6 +111,11 @@ services:
       gluetun:
         condition: service_started
     restart: unless-stopped
+    labels:
+      dynacat.name: QBittorrent
+      dynacat.icon: si:qbittorrent
+      dynacat.category: Media
+      dynacat.url: https://qbit.vathzen.in
 
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:latest
@@ -107,6 +138,11 @@ services:
       - "992"
     restart: unless-stopped
     networks: [internal]
+    labels:
+      dynacat.name: Jellyfin
+      dynacat.icon: si:jellyfin
+      dynacat.category: Media
+      dynacat.url: https://tv.vathzen.in
 
 networks:
   internal:
