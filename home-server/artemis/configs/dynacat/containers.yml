@@ -1,20 +1,7 @@
-- name: Home
-  hide-desktop-navigation: true
+- name: Containers
   columns:
     - size: full
       widgets:
-        - type: split-column
-          max-columns: 3
-          widgets:
-            - type: clock
-              hour-format: 24h
-              timezones:
-                - timezone: Europe/Helsinki
-                  label: Home
-                - timezone: Asia/Calcutta
-                  label: Chennai
-            - type: speedtest
-              frameless: true
         - type: split-column
           max-columns: 6
           title: Containers
@@ -47,18 +34,3 @@
                   category: SparkyFitness
                   frameless: true
                   title: Sparky Fitness
-    - size: small
-      widgets:
-        - type: weather
-          location: Espoo, Finland
-          units: metric
-          hour-format: 24h
-          # Optionally hide the location from being displayed in the widget
-          # hide-location: true
-        - type: markets
-          markets:
-            - name: NIFTY 50
-              symbol: ^NSEI
-              chart-link: https://www.tradingview.com/chart/?symbol=INDEX:NIFTY
-        - type: server-stats
-          title: Artemis

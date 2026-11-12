@@ -1,0 +1,7 @@
+include:
+  - docker-compose.monitoring.yml
+
+networks:
+  internal:
+    name: apollo_internal
+    driver: bridge
